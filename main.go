@@ -31,4 +31,10 @@ func main() {
 		return
 	}
 	fmt.Println(tableNames)
+
+	err = db.Close()
+	if err != nil {
+		fmt.Println("Error initializing database:", err)
+		return
+	}
 }

@@ -40,8 +40,17 @@ func (db *Database) connect() error {
 	return nil
 }
 
+func (db *Database) Close() error {
+	err := db.connection.Close()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (db *Database) GetAllTableNames() ([]string, error) {
-	queryString := fmt.Sprintf("SELECT name FROM %s WHERE type='table';", db.dsn)
+	queryString := "SELECT name FROM sqlite_master WHERE type='table';"
 	rows, err := db.connection.Query(queryString)
 	if err != nil {
 		return nil, err
@@ -56,8 +65,6 @@ func (db *Database) GetAllTableNames() ([]string, error) {
 		}
 		tableNames = append(tableNames, tableName)
 	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
+
 	return tableNames, nil
 }
