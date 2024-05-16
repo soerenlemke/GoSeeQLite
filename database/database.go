@@ -13,28 +13,51 @@ type Database struct {
 	connection *sql.DB
 }
 
-func (db *Database) NewDatabase(pathToDb string) error {
-	if pathToDb != "" {
-		db.dsn = pathToDb
-	} else {
-		return fmt.Errorf("path to db can't be empty")
+func NewDatabase(pathToDb string) (Database, error) {
+	if pathToDb == "" {
+		return Database{}, fmt.Errorf("path to db can't be empty")
 	}
 
-	err := db.testConnection()
+	d := Database{
+		dsn: pathToDb,
+	}
+
+	err := d.connect()
 	if err != nil {
-		return fmt.Errorf("can't connect to database: %s", db.dsn)
+		return Database{}, fmt.Errorf("can`t connect to database: %s", d.dsn)
 	}
 
-	return nil
+	return d, err
 }
 
-func (db *Database) testConnection() error {
+func (db *Database) connect() error {
 	var err error
 	db.connection, err = sql.Open("sqlite3", db.dsn)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.connection.Close()
 
 	return nil
+}
+
+func (db *Database) GetAllTableNames() ([]string, error) {
+	queryString := fmt.Sprintf("SELECT name FROM %s WHERE type='table';", db.dsn)
+	rows, err := db.connection.Query(queryString)
+	if err != nil {
+		return nil, err
+	}
+
+	var tableNames []string
+	for rows.Next() {
+		var tableName string
+		err := rows.Scan(&tableName)
+		if err != nil {
+			return nil, err
+		}
+		tableNames = append(tableNames, tableName)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return tableNames, nil
 }

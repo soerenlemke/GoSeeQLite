@@ -17,12 +17,18 @@ func main() {
 
 	pathToDb := os.Getenv("DATABASE_PATH")
 
-	db := &database.Database{}
-	err = db.NewDatabase(pathToDb)
+	db, err := database.NewDatabase(pathToDb)
 	if err != nil {
 		fmt.Println("Error initializing database:", err)
 		return
 	}
 
 	fmt.Println("Successfully connected to the database")
+
+	tableNames, err := db.GetAllTableNames()
+	if err != nil {
+		fmt.Println("Error getting the table names of the database:", err)
+		return
+	}
+	fmt.Println(tableNames)
 }
