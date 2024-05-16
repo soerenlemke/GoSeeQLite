@@ -22,6 +22,7 @@ func main() {
 		fmt.Println("Error initializing database:", err)
 		return
 	}
+	defer db.Close()
 
 	fmt.Println("Successfully connected to the database")
 
@@ -31,10 +32,4 @@ func main() {
 		return
 	}
 	fmt.Println(tableNames)
-
-	err = db.Close()
-	if err != nil {
-		fmt.Println("Error initializing database:", err)
-		return
-	}
 }
