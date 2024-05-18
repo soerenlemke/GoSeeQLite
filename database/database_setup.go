@@ -1,20 +1,26 @@
 package database
 
-import "fmt"
+import (
+	"database/sql"
+	"fmt"
+)
 
-func NewDatabase(pathToDb string) (Database, error) {
+func NewDatabase(pathToDb string) (*Database, error) {
 	if pathToDb == "" {
-		return Database{}, fmt.Errorf("path to db can't be empty")
+		return nil, fmt.Errorf("path to db can't be empty")
 	}
 
-	d := Database{
-		dsn: pathToDb,
-	}
-
-	err := d.connect()
+	db, err := sql.Open("sqlite3", pathToDb)
 	if err != nil {
-		return Database{}, fmt.Errorf("can`t connect to database: %s", d.dsn)
+		return nil, fmt.Errorf("can't connect to database: %s", pathToDb)
 	}
 
-	return d, err
+	d := &Database{
+		dsn:        pathToDb,
+		connection: db,
+	}
+
+	d.Get = &Get{DB: d}
+
+	return d, nil
 }
