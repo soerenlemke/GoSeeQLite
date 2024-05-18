@@ -22,7 +22,13 @@ func main() {
 		fmt.Println("Error initializing database:", err)
 		return
 	}
-	defer db.Close()
+	defer func(db *database.Database) {
+		err := db.Close()
+		if err != nil {
+			fmt.Println("Error closing the database:", err)
+			return
+		}
+	}(&db)
 
 	fmt.Println("Successfully connected to the database")
 

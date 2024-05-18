@@ -25,3 +25,6 @@ go.work
 
 # secrets
 *.env
+
+# jetbrains ide
+.idea
