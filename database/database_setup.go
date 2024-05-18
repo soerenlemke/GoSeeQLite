@@ -10,6 +10,8 @@ func NewDatabase(pathToDb string) (Database, error) {
 	d := Database{
 		dsn: pathToDb,
 	}
+	d.Get = &Get{DB: &d}
+	d.Set = &Set{DB: &d}
 
 	err := d.Connect()
 	if err != nil {
