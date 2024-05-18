@@ -7,7 +7,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func (db *Database) connect() error {
+func (db *Database) Connect() error {
 	var err error
 	db.connection, err = sql.Open("sqlite3", db.dsn)
 	if err != nil {
@@ -24,4 +24,12 @@ func (db *Database) Close() error {
 	}
 
 	return nil
+}
+
+func (db *Database) ConnectionStatus() bool {
+	err := db.connection.Ping()
+	if err != nil {
+		return false
+	}
+	return true
 }
