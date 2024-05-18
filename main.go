@@ -32,6 +32,13 @@ func main() {
 
 	fmt.Println("Successfully connected to the database")
 
+	databaseName, err := db.Get.DatabaseName()
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return
+	}
+	fmt.Println(databaseName)
+
 	tableNames, err := db.Get.AllTableNames()
 	if err != nil {
 		fmt.Println("Error getting the table names of the database:", err)
