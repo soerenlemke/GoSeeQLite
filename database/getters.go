@@ -42,39 +42,30 @@ func (g *Get) AllTableNames() ([]string, error) {
 	return tableNames, nil
 }
 
-type ColumnInfo struct {
-	Name string
-	Type string
-}
-
-type TableColumn struct {
-	Id           int
-	Name         string
-	Type         string
-	NotNull      int
-	DefaultValue sql.NullString
-	PrimaryKey   int
-}
-
 func (g *Get) TableColumns(t string) ([]ColumnInfo, error) {
 	queryString := fmt.Sprintf("PRAGMA table_info(%s);", t)
-	rows, err := g.DB.connection.Query(queryString)
+	columns, err := g.DB.connection.Query(queryString)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			log.Println("Error closing columns:", err)
+		}
+	}(columns)
 
 	var result []ColumnInfo
-	for rows.Next() {
+	for columns.Next() {
 		var tc TableColumn
-		err := rows.Scan(&tc.Id, &tc.Name, &tc.Type, &tc.NotNull, &tc.DefaultValue, &tc.PrimaryKey)
+		err := columns.Scan(&tc.Id, &tc.Name, &tc.Type, &tc.NotNull, &tc.DefaultValue, &tc.PrimaryKey)
 		if err != nil {
 			return nil, err
 		}
 		result = append(result, ColumnInfo{Name: tc.Name, Type: tc.Type})
 	}
 
-	if err = rows.Err(); err != nil {
+	if err = columns.Err(); err != nil {
 		return nil, err
 	}
 
