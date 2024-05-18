@@ -28,7 +28,7 @@ func main() {
 			fmt.Println("Error closing the database:", err)
 			return
 		}
-	}(db)
+	}(&db)
 
 	fmt.Println("Successfully connected to the database")
 

@@ -11,7 +11,7 @@ func NewDatabase(pathToDb string) (Database, error) {
 		dsn: pathToDb,
 	}
 
-	err := d.connect()
+	err := d.Connect()
 	if err != nil {
 		return Database{}, fmt.Errorf("can`t connect to database: %s", d.dsn)
 	}
