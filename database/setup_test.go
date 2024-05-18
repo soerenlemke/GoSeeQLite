@@ -1,31 +1,41 @@
 package database
 
 import (
-	"reflect"
+	"path/filepath"
 	"testing"
 )
 
 func TestNewDatabase(t *testing.T) {
-	type args struct {
-		pathToDb string
-	}
+	testSampleDb, _ := filepath.Abs(filepath.Join("testdata", "test_db.db"))
 	tests := []struct {
 		name    string
-		args    args
-		want    Database
+		args    string //pathToDb
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		// TODO: Test case for an invalid database file
+		{
+			"Empty Db path", "", true,
+		},
+		{
+			"Valid db", testSampleDb, false,
+		},
+		
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewDatabase(tt.args.pathToDb)
+			got, err := NewDatabase(tt.args)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewDatabase() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewDatabase() got = %v, want %v", got, tt.want)
+
+			if !tt.wantErr{
+				// Doing this to check whether the output we got
+				// is an initialized Database instance
+				if got.dsn != tt.args || got.Get == nil || got.Set == nil || got.connection == nil {
+					t.Fatalf("NewDatabase() returned uninitialized Database instance")
+					return
+				}
 			}
 		})
 	}
