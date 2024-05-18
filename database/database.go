@@ -1,5 +1,19 @@
 package database
 
+import (
+	"fmt"
+	"path/filepath"
+)
+
+func (g *Get) DatabaseName() (string, error) {
+	databaseName := filepath.Base(g.DB.dsn)
+	if databaseName == "" {
+		return "", fmt.Errorf("error getting the name of the given database")
+	}
+
+	return databaseName, nil
+}
+
 func (g *Get) AllTableNames() ([]string, error) {
 	queryString := "SELECT name FROM sqlite_master WHERE type='table';"
 	rows, err := g.DB.connection.Query(queryString)
