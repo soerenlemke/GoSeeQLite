@@ -16,3 +16,12 @@ type Get struct {
 type Set struct {
 	DB *Database
 }
+
+type TableColumn struct {
+	Id           int
+	Name         string
+	Type         string
+	NotNull      int
+	DefaultValue sql.NullString
+	PrimaryKey   int
+}

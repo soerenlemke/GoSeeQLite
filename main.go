@@ -25,7 +25,7 @@ func main() {
 	defer func(db *database.Database) {
 		err := db.Close()
 		if err != nil {
-			fmt.Println("Error closing the database:", err)
+			fmt.Println("Error closing the database: ", err)
 			return
 		}
 	}(&db)
@@ -41,8 +41,22 @@ func main() {
 
 	tableNames, err := db.Get.AllTableNames()
 	if err != nil {
-		fmt.Println("Error getting the table names of the database:", err)
+		fmt.Println("Error getting the table names of the database: ", err)
 		return
 	}
 	fmt.Println(tableNames)
+
+	// Iterate over all tables and print column information
+	for _, tableName := range tableNames {
+		fmt.Println("Table:", tableName)
+		columnInfos, err := db.Get.TableColumns(tableName)
+		if err != nil {
+			fmt.Println("Error getting the column names for the table", tableName, ":", err)
+			return
+		}
+		for _, columnInfo := range columnInfos {
+			fmt.Println("Column Name:", columnInfo.Name, ", Column Type:", columnInfo.Type)
+		}
+		fmt.Println()
+	}
 }
