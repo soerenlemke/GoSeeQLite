@@ -43,19 +43,7 @@ func (g *Get) AllTableNames() ([]string, error) {
 }
 
 func (g *Get) TableColumns(t string) ([]TableColumn, error) {
-	queryString := fmt.Sprintf("PRAGMA table_info(%s);", t)
-	statement, err := g.DB.connection.Prepare(queryString)
-	if err != nil {
-		return nil, err
-	}
-	defer func(statement *sql.Stmt) {
-		err := statement.Close()
-		if err != nil {
-			log.Println("Error closing statement: ", err)
-		}
-	}(statement)
-
-	rows, err := statement.Query()
+	rows, err := g.DB.connection.Query(fmt.Sprintf("PRAGMA table_info(%s);", t))
 	if err != nil {
 		return nil, err
 	}
