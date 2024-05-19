@@ -55,8 +55,8 @@ func main() {
 			return
 		}
 		for _, columnInfo := range columnInfos {
-			fmt.Printf("Column ID: %d, Name: %s, Type: %s, Not Null: %d, Default Value: %v, Primary Key: %d\n",
-				columnInfo.Id, columnInfo.Name, columnInfo.Type, columnInfo.NotNull, columnInfo.DefaultValue.String, columnInfo.PrimaryKey)
+			fmt.Printf("Column ID: %d, Name: %s, Type: %s, Not Null: %d, Default Value: %v, Primary Key: %d, Foreign Key: %t, Referenced Table: %s, Referenced Column: %s\n",
+				columnInfo.Id, columnInfo.Name, columnInfo.Type, columnInfo.NotNull, columnInfo.DefaultValue.String, columnInfo.PrimaryKey, columnInfo.ForeignKey, columnInfo.ReferencedTable, columnInfo.ReferencedColumn)
 		}
 		fmt.Println()
 	}

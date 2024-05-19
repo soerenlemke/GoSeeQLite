@@ -62,26 +62,56 @@ func (g *Get) TableColumns(t string) ([]TableColumn, error) {
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, TableColumn{
-			Name:         tc.Name,
-			Type:         tc.Type,
-			NotNull:      tc.NotNull,
-			DefaultValue: tc.DefaultValue,
-			PrimaryKey:   tc.PrimaryKey,
-		})
+		result = append(result, tc)
 	}
 
 	if err = rows.Err(); err != nil {
 		return nil, err
 	}
 
+	fkRows, err := g.DB.connection.Query(fmt.Sprintf("PRAGMA foreign_key_list(%s);", t))
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		err := fkRows.Close()
+		if err != nil {
+			log.Println("Error closing rows: ", err)
+		}
+	}()
+
+	for fkRows.Next() {
+		var id int
+		var seq int
+		var table string
+		var from string
+		var to string
+		var on_update string
+		var on_delete string
+		var match string
+		err := fkRows.Scan(&id, &seq, &table, &from, &to, &on_update, &on_delete, &match)
+		if err != nil {
+			return nil, err
+		}
+
+		for i := range result {
+			if result[i].Name == from {
+				result[i].ForeignKey = true
+				result[i].ReferencedTable = table
+				result[i].ReferencedColumn = to
+			}
+		}
+	}
+
+	if err = fkRows.Err(); err != nil {
+		return nil, err
+	}
+
 	return result, nil
 }
 
-// TableKeys TODO: implement function
-func (g *Get) TableKeys() {}
-
-// TableForeignKeys TODO: implement function
+// TableForeignKeys TODO: Outsource code from TableColumns ?
 func (g *Get) TableForeignKeys() {}
 
 // TableIndexes TODO: implement function
