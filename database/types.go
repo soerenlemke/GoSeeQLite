@@ -17,11 +17,6 @@ type Set struct {
 	DB *Database
 }
 
-type ColumnInfo struct {
-	Name string
-	Type string
-}
-
 type TableColumn struct {
 	Id           int
 	Name         string
