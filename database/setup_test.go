@@ -17,9 +17,11 @@ func TestNewDatabase(t *testing.T) {
 			"Empty Db path", "", true,
 		},
 		{
+			"Db path does not exist", "does/not/exist.db", true,
+		},
+		{
 			"Valid db", testSampleDb, false,
 		},
-		
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -29,7 +31,7 @@ func TestNewDatabase(t *testing.T) {
 				return
 			}
 
-			if !tt.wantErr{
+			if !tt.wantErr {
 				// Doing this to check whether the output we got
 				// is an initialized Database instance
 				if got.dsn != tt.args || got.Get == nil || got.Set == nil || got.connection == nil {
