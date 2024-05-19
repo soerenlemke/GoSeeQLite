@@ -42,6 +42,7 @@ func (g *Get) AllTableNames() ([]string, error) {
 	return tableNames, nil
 }
 
+// TableColumns TODO: Refactor for better read- and testability
 func (g *Get) TableColumns(t string) ([]TableColumn, error) {
 	rows, err := g.DB.connection.Query(fmt.Sprintf("PRAGMA table_info(%s);", t))
 	if err != nil {
