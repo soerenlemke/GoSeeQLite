@@ -2,38 +2,9 @@ package database
 
 import (
 	"database/sql"
-	"reflect"
+	"path/filepath"
 	"testing"
 )
-
-func TestDatabase_Close(t *testing.T) {
-	type fields struct {
-		dsn        string
-		connection *sql.DB
-		Get        *Get
-		Set        *Set
-	}
-	tests := []struct {
-		name    string
-		fields  fields
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			db := &Database{
-				dsn:        tt.fields.dsn,
-				connection: tt.fields.connection,
-				Get:        tt.fields.Get,
-				Set:        tt.fields.Set,
-			}
-			if err := db.Close(); (err != nil) != tt.wantErr {
-				t.Errorf("Close() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
 
 func TestDatabase_Connect(t *testing.T) {
 	type fields struct {
@@ -48,7 +19,7 @@ func TestDatabase_Connect(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "Test case 1: Close a valid database connection",
+			name: "Test case 1: Valid Connection",
 			fields: fields{
 				dsn:        "test.db",
 				connection: &sql.DB{}, // assuming this is a valid connection
@@ -74,34 +45,32 @@ func TestDatabase_Connect(t *testing.T) {
 }
 
 func TestDatabase_ConnectionStatus(t *testing.T) {
-	type fields struct {
-		dsn        string
-		connection *sql.DB
-		Get        *Get
-		Set        *Set
-	}
+	// This is pretty much a useless test as NewDatabase()
+	// already calls ConnectionStatus.
+	// TODO: Find a better test
+	testSampleValidDb, _ := filepath.Abs(filepath.Join("testdata", "chinook.db"))
 	tests := []struct {
 		name    string
-		fields  fields
-		wantErr error
+		wantErr bool
 		wantOk  bool
+		dsn     string
 	}{
-		// TODO: Add test cases.
+		{
+			"Valid Database", false, true, testSampleValidDb,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			db := &Database{
-				dsn:        tt.fields.dsn,
-				connection: tt.fields.connection,
-				Get:        tt.fields.Get,
-				Set:        tt.fields.Set,
-			}
+			db, _ := NewDatabase(tt.dsn)
 			gotErr, gotOk := db.ConnectionStatus()
-			if !reflect.DeepEqual(gotErr, tt.wantErr) {
-				t.Errorf("ConnectionStatus() gotErr = %v, want %v", gotErr, tt.wantErr)
+			if (gotErr != nil) != tt.wantErr {
+				t.Errorf("ConnectionStaus() error = %v, wantErr %v", gotErr, tt.wantErr)
+				return
 			}
+
 			if gotOk != tt.wantOk {
-				t.Errorf("ConnectionStatus() gotOk = %v, want %v", gotOk, tt.wantOk)
+				t.Errorf("ConnectionStatus() ok = %v, wantOk %v", gotOk, tt.wantOk)
+				return
 			}
 		})
 	}
