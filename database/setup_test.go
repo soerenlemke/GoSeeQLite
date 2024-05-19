@@ -6,7 +6,7 @@ import (
 )
 
 func TestNewDatabase(t *testing.T) {
-	testSampleInvalidDb, _ := filepath.Abs(filepath.Join("testdata", "invaliddb.go"))
+	testSampleInvalidDb, _ := filepath.Abs(filepath.Join("testdata", "invaliddb.db"))
 	testSampleValidDb, _ := filepath.Abs(filepath.Join("testdata", "chinook.db"))
 	tests := []struct {
 		name    string
