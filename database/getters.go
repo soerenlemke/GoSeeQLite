@@ -83,3 +83,12 @@ func (g *Get) TableColumns(t string) ([]TableColumn, error) {
 
 	return result, nil
 }
+
+// TableKeys TODO: implement function
+func (g *Get) TableKeys(t string) {}
+
+// TableForeignKeys TODO: implement function
+func (g *Get) TableForeignKeys() {}
+
+// TableIndexes TODO: implement function
+func (g *Get) TableIndexes() {}

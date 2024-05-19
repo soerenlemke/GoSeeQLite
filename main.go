@@ -55,7 +55,8 @@ func main() {
 			return
 		}
 		for _, columnInfo := range columnInfos {
-			fmt.Println("Column Name:", columnInfo.Name, ", Column Type:", columnInfo.Type)
+			fmt.Printf("Column ID: %d, Name: %s, Type: %s, Not Null: %d, Default Value: %v, Primary Key: %d\n",
+				columnInfo.Id, columnInfo.Name, columnInfo.Type, columnInfo.NotNull, columnInfo.DefaultValue.String, columnInfo.PrimaryKey)
 		}
 		fmt.Println()
 	}
