@@ -62,7 +62,13 @@ func (g *Get) TableColumns(t string) ([]TableColumn, error) {
 		if err != nil {
 			return nil, err
 		}
-		result = append(result, TableColumn{Name: tc.Name, Type: tc.Type})
+		result = append(result, TableColumn{
+			Name:         tc.Name,
+			Type:         tc.Type,
+			NotNull:      tc.NotNull,
+			DefaultValue: tc.DefaultValue,
+			PrimaryKey:   tc.PrimaryKey,
+		})
 	}
 
 	if err = rows.Err(); err != nil {
@@ -73,7 +79,7 @@ func (g *Get) TableColumns(t string) ([]TableColumn, error) {
 }
 
 // TableKeys TODO: implement function
-func (g *Get) TableKeys(t string) {}
+func (g *Get) TableKeys() {}
 
 // TableForeignKeys TODO: implement function
 func (g *Get) TableForeignKeys() {}
