@@ -6,13 +6,13 @@ import (
 )
 
 func TestNewDatabase(t *testing.T) {
-	testSampleDb, _ := filepath.Abs(filepath.Join("testdata", "test_db.db"))
+	testSampleInvalidDb, _ := filepath.Abs(filepath.Join("testdata", "invaliddb.go"))
+	testSampleValidDb, _ := filepath.Abs(filepath.Join("testdata", "chinook.db"))
 	tests := []struct {
 		name    string
 		args    string //pathToDb
 		wantErr bool
 	}{
-		// TODO: Test case for an invalid database file
 		{
 			"Empty Db path", "", true,
 		},
@@ -20,7 +20,10 @@ func TestNewDatabase(t *testing.T) {
 			"Db path does not exist", "does/not/exist.db", true,
 		},
 		{
-			"Valid db", testSampleDb, false,
+			"Invalid Db file", testSampleInvalidDb, true,
+		},
+		{
+			"Valid db", testSampleValidDb, false,
 		},
 	}
 	for _, tt := range tests {
