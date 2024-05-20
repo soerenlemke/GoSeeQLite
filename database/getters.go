@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"path/filepath"
+	"strings"
 )
 
 func (g *Get) DatabaseName() (string, error) {
@@ -36,7 +37,9 @@ func (g *Get) AllTableNames() ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
-		tableNames = append(tableNames, tableName)
+		if !strings.HasPrefix(tableName, "sqlite_") {
+			tableNames = append(tableNames, tableName)
+		}
 	}
 
 	return tableNames, nil
@@ -44,29 +47,29 @@ func (g *Get) AllTableNames() ([]string, error) {
 
 // TableColumns TODO: Refactor for better read- and testability
 func (g *Get) TableColumns(t string) ([]TableColumn, error) {
-	rows, err := g.DB.connection.Query(fmt.Sprintf("PRAGMA table_info(%s);", t))
+	columns, err := g.DB.connection.Query(fmt.Sprintf("PRAGMA table_info(%s);", t))
 	if err != nil {
 		return nil, err
 	}
 
 	defer func() {
-		err := rows.Close()
+		err := columns.Close()
 		if err != nil {
-			log.Println("Error closing rows: ", err)
+			log.Println("Error closing columns: ", err)
 		}
 	}()
 
 	var result []TableColumn
-	for rows.Next() {
+	for columns.Next() {
 		var tc TableColumn
-		err := rows.Scan(&tc.Id, &tc.Name, &tc.Type, &tc.NotNull, &tc.DefaultValue, &tc.PrimaryKey)
+		err := columns.Scan(&tc.Id, &tc.Name, &tc.Type, &tc.NotNull, &tc.DefaultValue, &tc.PrimaryKey)
 		if err != nil {
 			return nil, err
 		}
 		result = append(result, tc)
 	}
 
-	if err = rows.Err(); err != nil {
+	if err = columns.Err(); err != nil {
 		return nil, err
 	}
 
@@ -78,7 +81,7 @@ func (g *Get) TableColumns(t string) ([]TableColumn, error) {
 	defer func() {
 		err := fkRows.Close()
 		if err != nil {
-			log.Println("Error closing rows: ", err)
+			log.Println("Error closing columns: ", err)
 		}
 	}()
 
