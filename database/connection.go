@@ -9,7 +9,7 @@ import (
 )
 
 func (db *Database) Connect() error {
-	err, ok := db.ConnectionStatus()
+	ok, err := db.ConnectionStatus()
 	if err != nil || !ok {
 		return fmt.Errorf("error connecting to the database: %s", err)
 	}
@@ -31,13 +31,13 @@ func (db *Database) Close() error {
 	return nil
 }
 
-func (db *Database) ConnectionStatus() (err error, ok bool) {
+func (db *Database) ConnectionStatus() (ok bool, err error) {
 	// Returns error if the file is not a valid database
 
 	err = db.connection.Ping()
 	if err != nil {
-		return err, false
+		return false, err
 	}
 
-	return nil, true
+	return true, nil
 }

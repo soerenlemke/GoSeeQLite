@@ -56,13 +56,13 @@ func TestDatabase_ConnectionStatus(t *testing.T) {
 		dsn     string
 	}{
 		{
-			"Valid Database", false, true, testSampleValidDb,
+			"Valid Database", true, false, testSampleValidDb,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			db, _ := NewDatabase(tt.dsn)
-			gotErr, gotOk := db.ConnectionStatus()
+			gotOk, gotErr := db.ConnectionStatus()
 			if (gotErr != nil) != tt.wantErr {
 				t.Errorf("ConnectionStaus() error = %v, wantErr %v", gotErr, tt.wantErr)
 				return
