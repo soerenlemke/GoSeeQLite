@@ -1,7 +1,7 @@
 # GoSeeQLite
 
 GoSeeQLite is a SQLite database viewer written in Go. It provides an easy and efficient way to interact with 
-SQLite databases, allowing users to view all table names in a database.
+SQLite databases.
 
 ## Project Goals
 
