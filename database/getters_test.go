@@ -37,33 +37,33 @@ func TestGet_AllTableNames(t *testing.T) {
 }
 
 func TestGet_TableColumns(t *testing.T) {
-	type fields struct {
-		DB *Database
-	}
-	type args struct {
-		t string
-	}
 	tests := []struct {
 		name    string
-		fields  fields
-		args    args
-		want    []string
+		args    string
+		wantFk  []bool // Since each column also has a value that shows if it is Fk or not
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{
+			"Valid table with no foreign key", "artists", []bool{false, false}, false,
+		},
+		{
+			"Valid table with foreign key", "albums", []bool{false, false, true}, false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			g := &Get{
-				DB: tt.fields.DB,
-			}
-			got, err := g.TableColumns(tt.args.t)
+			testSampleValidDb, _ := filepath.Abs(filepath.Join("testdata", "chinook.db"))
+			db, _ := NewDatabase(testSampleValidDb)
+			got, err := db.Get.TableColumns(tt.args)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("TableColumns() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("TableColumns() got = %v, want %v", got, tt.want)
+			for i, col := range got {
+				if col.ForeignKey != tt.wantFk[i] {
+					t.Errorf("TableColumns() error : Table : %s Column : %s WantFk : %t GotFk : %t", tt.args, col.Name, tt.wantFk[i], col.ForeignKey)
+					return
+				}
 			}
 		})
 	}
