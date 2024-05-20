@@ -33,8 +33,6 @@ func (db *Database) Close() error {
 }
 
 func (db *Database) ConnectionStatus() (ok bool, err error) {
-	// Returns error if the file is not a valid database
-
 	err = db.connection.Ping()
 	if err != nil {
 		return false, err
