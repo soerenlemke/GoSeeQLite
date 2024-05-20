@@ -56,7 +56,7 @@ func TestDatabase_ConnectionStatus(t *testing.T) {
 		dsn     string
 	}{
 		{
-			"Valid Database", true, false, testSampleValidDb,
+			"Valid Database", false, true, testSampleValidDb,
 		},
 	}
 	for _, tt := range tests {

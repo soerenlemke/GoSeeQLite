@@ -9,14 +9,15 @@ import (
 )
 
 func (db *Database) Connect() error {
-	ok, err := db.ConnectionStatus()
-	if err != nil || !ok {
-		return fmt.Errorf("error connecting to the database: %s", err)
-	}
-
+	var err error
 	db.connection, err = sql.Open("sqlite3", db.dsn)
 	if err != nil {
 		return err
+	}
+
+	ok, err := db.ConnectionStatus()
+	if err != nil || !ok {
+		return fmt.Errorf("error connecting to the database: %s", err)
 	}
 
 	return nil
