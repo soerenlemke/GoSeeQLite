@@ -24,9 +24,8 @@ func NewDatabase(pathToDb string) (Database, error) {
 		return Database{}, fmt.Errorf("can`t connect to database: %s", d.dsn)
 	}
 
-	ok, err := d.ConnectionStatus()
-	if !ok {
-		// The file is not a database
+	err = d.ConnectionStatus()
+	if err != nil {
 		return Database{}, err
 	}
 

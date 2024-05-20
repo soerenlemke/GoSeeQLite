@@ -15,8 +15,8 @@ func (db *Database) Connect() error {
 		return err
 	}
 
-	ok, err := db.ConnectionStatus()
-	if err != nil || !ok {
+	err = db.ConnectionStatus()
+	if err != nil {
 		return fmt.Errorf("error connecting to the database: %s", err)
 	}
 
@@ -32,11 +32,11 @@ func (db *Database) Close() error {
 	return nil
 }
 
-func (db *Database) ConnectionStatus() (ok bool, err error) {
-	err = db.connection.Ping()
+func (db *Database) ConnectionStatus() error {
+	err := db.connection.Ping()
 	if err != nil {
-		return false, err
+		return err
 	}
 
-	return true, nil
+	return nil
 }
