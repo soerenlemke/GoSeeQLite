@@ -18,7 +18,7 @@ func TestGet_AllTableNames(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			"Valid database", fields{dsn: testSampleValidDb}, []string{"albums", "sqlite_sequence", "artists", "customers", "employees", "genres", "invoices", "invoice_items", "media_types", "playlists", "playlist_track", "tracks", "sqlite_stat1"}, false,
+			"Valid database", fields{dsn: testSampleValidDb}, []string{"albums", "artists", "customers", "employees", "genres", "invoices", "invoice_items", "media_types", "playlists", "playlist_track", "tracks"}, false,
 		},
 	}
 	for _, tt := range tests {
